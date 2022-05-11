@@ -1,6 +1,7 @@
 ﻿using MurbongTimeScheduler.Views;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 
 namespace MurbongTimeScheduler
@@ -9,11 +10,24 @@ namespace MurbongTimeScheduler
     {
         None,
         Week,
-        Month
+        Month,
+        WeekofMonth
     }
 
     public static class Global
     {
+        public static int GetWeekNumber(DateTime args)
+        {
+            var firstDate = new DateTime(args.Year, args.Month, 1);
+            var offset = -1;
+            if(firstDate.DayOfWeek < DayOfWeek.Friday)
+            {
+                offset = 0;
+            }
+
+            return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(args, CalendarWeekRule.FirstDay, DayOfWeek.Sunday) -
+            CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(firstDate, CalendarWeekRule.FirstDay, DayOfWeek.Sunday) + 1+offset;
+        }
 
         public static DayView EditingDayView { get; set; }
         public static List<WorkView> WorkViews { get; set; }

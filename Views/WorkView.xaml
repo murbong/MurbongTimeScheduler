@@ -44,6 +44,8 @@
                     <MenuItem Header="Promote">
                         <MenuItem Header="To Week" Click="WeekPromote_Click"/>
                         <MenuItem Header="To Month" Click="MonthPromote_Click"/>
+                        <MenuItem Header="To WeekOfMonth" Click="WeekOfMonth_Click"/>
+
                     </MenuItem>
                 </ContextMenu>
             </Border.ContextMenu>

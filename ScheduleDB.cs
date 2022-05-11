@@ -15,7 +15,8 @@ namespace MurbongTimeScheduler
             {
                 { WorkType.None, new List<Schedule>() },
                 { WorkType.Week, new List<Schedule>() },
-                { WorkType.Month, new List<Schedule>() }
+                { WorkType.Month, new List<Schedule>() },
+                { WorkType.WeekofMonth, new List<Schedule>() }
             };
         }
         public void Save(string filename)
@@ -47,6 +48,7 @@ namespace MurbongTimeScheduler
         public DateTime Date { get; set; }
         public DayOfWeek Week => Date.DayOfWeek;
         public int Day => Date.Day;
+        public int WeekNumber => Global.GetWeekNumber(Date);
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public string Title { get; set; }

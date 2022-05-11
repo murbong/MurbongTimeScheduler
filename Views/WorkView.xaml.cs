@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -198,6 +199,25 @@ namespace MurbongTimeScheduler.Views
             viewSchedule.WorkType = WorkType.Month;
 
             Global.ScheduleDB.Schedules[WorkType.Month].Add(viewSchedule);
+            Global.ScheduleDB.Save("save");
+
+            Global.ReloadEvent.Invoke(Date);
+
+        }
+
+        private void WeekOfMonth_Click(object sender, RoutedEventArgs e)
+        {
+            if (WorkType == WorkType.WeekofMonth)
+            {
+                return;
+            }
+
+            Schedule viewSchedule = Global.ScheduleDB.Schedules[WorkType].Where(element => element.ID == ID).FirstOrDefault();
+            Global.ScheduleDB.Schedules[WorkType].Remove(viewSchedule);
+            WorkType = WorkType.WeekofMonth;
+            viewSchedule.WorkType = WorkType.WeekofMonth;
+
+            Global.ScheduleDB.Schedules[WorkType.WeekofMonth].Add(viewSchedule);
             Global.ScheduleDB.Save("save");
 
             Global.ReloadEvent.Invoke(Date);

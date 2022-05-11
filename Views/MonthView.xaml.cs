@@ -87,23 +87,27 @@ namespace MurbongTimeScheduler.Views
             IEnumerable<Schedule> monthDatas = Global.ScheduleDB.Schedules[WorkType.None].Where(e => e.Date.Year == month.Year && e.Date.Month == month.Month);
             List<Schedule> weekRoutine = Global.ScheduleDB.Schedules[WorkType.Week];
             List<Schedule> monthRoutine = Global.ScheduleDB.Schedules[WorkType.Month];
+            var wom = Global.ScheduleDB.Schedules[WorkType.WeekofMonth];
 
-            Debug.Print(monthDatas.Count() + "");
+            Debug.WriteLine(wom.Count);
+
+
 
             IEnumerable<DayView> dayView = MonthGrid.Children.OfType<DayView>().Where(e => e.ParentDate.Month == month.Month);
             foreach (int i in Enumerable.Range(1, totalDays))
             {
                 DateTime DTime = new DateTime(month.Year, month.Month, i);
 
+
                 IEnumerable<Schedule> wr = weekRoutine.Where(e => e.Week == DTime.DayOfWeek);
                 IEnumerable<Schedule> mr = monthRoutine.Where(e => e.Day == DTime.Day);
-
-                Debug.WriteLine(wr.Count());
+                IEnumerable<Schedule> womr = wom.Where(e => e.WeekNumber == Global.GetWeekNumber(DTime) && e.Week == DTime.DayOfWeek);
 
                 DayView view = dayView.FirstOrDefault(e => e.ParentDate.Day == i);
                 IEnumerable<Schedule> dayData = monthDatas.Where(e => e.Date.Day == i);
                 view.AddWorkViewRange(wr);
                 view.AddWorkViewRange(mr);
+                view.AddWorkViewRange(womr);
                 view.AddWorkViewRange(dayData);
             }
         }
@@ -119,7 +123,6 @@ namespace MurbongTimeScheduler.Views
                 rows++;
             }
             double width = ActualWidth / (rows + 2);
-            Debug.WriteLine("width : " + width);
 
 
 
@@ -144,7 +147,7 @@ namespace MurbongTimeScheduler.Views
                 MonthGrid.RowDefinitions.Add(row);
 
                 DateTime curDate = new DateTime(CurrentDate.Year, CurrentDate.Month, i + 1);
-                Label label = new Label { Content = string.Format("{0}일({1})", i + 1, GetWeek(curDate.DayOfWeek)), FontFamily = new FontFamily("#MapleStory") };
+                Label label = new Label { Content = string.Format("{0}일({1}){2}주차", i + 1, GetWeek(curDate.DayOfWeek), Global.GetWeekNumber(curDate)), FontFamily = new FontFamily("#MapleStory") };
                 label.SetValue(Grid.ColumnProperty, 0);
                 label.SetValue(Grid.RowProperty, i);
                 label.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Right);
