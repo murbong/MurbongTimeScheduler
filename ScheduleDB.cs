@@ -19,7 +19,7 @@ namespace MurbongTimeScheduler
                 { WorkType.WeekofMonth, new List<Schedule>() }
             };
         }
-        public void Save(string filename)
+        public void Save(string filename = "save")
         {
             using (StreamWriter sw = new StreamWriter(filename))
             {
@@ -66,9 +66,11 @@ namespace MurbongTimeScheduler
         }
         public void WakeAlarmApplication()
         {
-            if (!IsDone && AlarmCount == false)
+            if (IsDone) {return; }
+            if (AlarmCount == false)
             {
                 AlarmCount = true;
+                Global.ScheduleDB.Save("save");
 
                 new ToastContentBuilder()
                 .AddArgument("action", "viewConversation")
@@ -76,7 +78,9 @@ namespace MurbongTimeScheduler
                 .AddText($"스케줄 {Title} 알림입니다.").AddButton(
                     new ToastButton().
                     SetContent("알람 끄기").
-                    AddArgument("action", "off").SetBackgroundActivation())
+                    AddArgument("action", "off").SetBackgroundActivation()
+                    ).
+                    SetToastDuration(ToastDuration.Long)
                 .Show();
 
             }

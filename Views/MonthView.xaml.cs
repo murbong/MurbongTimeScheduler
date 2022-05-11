@@ -89,8 +89,6 @@ namespace MurbongTimeScheduler.Views
             List<Schedule> monthRoutine = Global.ScheduleDB.Schedules[WorkType.Month];
             var wom = Global.ScheduleDB.Schedules[WorkType.WeekofMonth];
 
-            Debug.WriteLine(wom.Count);
-
 
 
             IEnumerable<DayView> dayView = MonthGrid.Children.OfType<DayView>().Where(e => e.ParentDate.Month == month.Month);
