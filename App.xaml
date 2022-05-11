@@ -1,0 +1,9 @@
+﻿<Application x:Class="MurbongTimeScheduler.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:MurbongTimeScheduler"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary Source="ControlStyle.xaml"/>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,122 @@
+﻿<Window x:Class="MurbongTimeScheduler.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MurbongTimeScheduler"
+        xmlns:view="clr-namespace:MurbongTimeScheduler.Views"
+        mc:Ignorable="d"
+        Title="Time Schedular" Height="450" Width="800" WindowStyle="None">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CornerRadius="2" CaptionHeight="20"  ResizeBorderThickness="3" />
+    </WindowChrome.WindowChrome>
+
+    <Grid x:Name="Main" Background="White">
+        <DockPanel>
+            <Border DockPanel.Dock="Top" Background="AliceBlue" BorderThickness="2">
+                <DockPanel>
+                    <TextBlock IsHitTestVisible="False" DockPanel.Dock="Left" Width="auto" Text="Scheduler One" TextAlignment="Center" VerticalAlignment="Center" FontFamily="#MapleStory" Padding="10 ,0,0,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                        <Button Width="20" Height="20" WindowChrome.IsHitTestVisibleInChrome="True" Content="-"/>
+                        <Button Width="20" Height="20" WindowChrome.IsHitTestVisibleInChrome="True" Click="Button_Click_2" Content="X"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <TabControl DockPanel.Dock="Bottom" TabStripPlacement="Left">
+                <TabItem Header="스케줄" FontFamily="#MapleStory">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                            <Button Height="20" Width="20" Click="Button_Click" BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <ImageBrush ImageSource="Resources\PreviousClick.png"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="False">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <ImageBrush ImageSource="Resources\PreviousDefault.png"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                            <TextBlock x:Name="YearnMonth" FontFamily="#MapleStory" HorizontalAlignment="Center" TextAlignment="Center" FontSize="24" Width="120" FontWeight="bold" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown">
+                                <TextBlock.Background>
+                                    <ImageBrush ImageSource="Resources\Calender.png"></ImageBrush>
+                                </TextBlock.Background>
+                        2022-03
+                            </TextBlock>
+                            <Button Height="20" Width="20" Click="Button_Click_1" BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <ImageBrush ImageSource="Resources\NextClick.png"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="False">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <ImageBrush ImageSource="Resources\NextDefault.png"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                        <view:MonthView Grid.Row="1"/>
+                        <Popup x:Name="CalendarPopup" IsOpen="False" StaysOpen="True">
+                            <Calendar x:Name="CalendarControl"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" DisplayMode="Year" SelectedDatesChanged="CalendarControl_SelectedDatesChanged">
+                            </Calendar>
+                        </Popup>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="요약" FontFamily="#MapleStory">
+                    <view:SummaryView/>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+
+    </Grid>
+
+</Window>
