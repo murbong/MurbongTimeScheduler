@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MurbongTimeScheduler.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="300">
+             xmlns:asm="clr-namespace:MurbongTimeScheduler"
+             d:DesignHeight="150" d:DesignWidth="300" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.Style>
             <Style TargetType="{x:Type Grid}">
@@ -21,14 +22,17 @@
         <Border x:Name="backgroundBorder" MouseDown="backgroundBorder_MouseDown" VerticalAlignment="Center" BorderThickness="2" Height="29" CornerRadius="2" Margin="0" Grid.Column="1" Grid.ColumnSpan="2">
             <Border.Style>
                 <Style TargetType="{x:Type Border}">
+                    <Setter Property="BorderBrush" Value="#444" />
+                    <Setter Property="Background" Value="#dedede"/>
                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding WorkType}" Value="{x:Static asm:WorkType.Week}">
+                            <Setter Property="Background" Value="#aaa" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding WorkType}" Value="{x:Static asm:WorkType.Month}">
+                            <Setter Property="Background" Value="#868686" />
+                        </DataTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="#bad770" />
-                            <Setter Property="Background" Value="#d4f0b0"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="False">
-                            <Setter Property="BorderBrush" Value="#9dc633" />
-                            <Setter Property="Background" Value="#c2e98f"/>
+                            <Setter Property="BorderBrush" Value="#fff" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -44,14 +48,14 @@
                 </ContextMenu>
             </Border.ContextMenu>
             <Grid>
-                <TextBlock x:Name="txt_Title" Background="Transparent" TextWrapping="Wrap" Margin="10 0 10 0" TextAlignment="Center" VerticalAlignment="Center" FontFamily="#MapleStory" IsHitTestVisible="False"/>
+                <TextBlock x:Name="txt_Title" Text="{Binding WorkType}" Background="Transparent" TextWrapping="Wrap" Margin="10 0 10 0" TextAlignment="Center" VerticalAlignment="Center" FontFamily="#MapleStory" IsHitTestVisible="False"/>
 
 
                 <Canvas Panel.ZIndex="2">
-                    <Rectangle Fill="#9dc633" Height="2" Width="2" Canvas.Left="3" Canvas.Top="3"></Rectangle>
-                    <Rectangle Fill="#9dc633" Height="2" Width="2" Canvas.Left="3" Canvas.Bottom="3"></Rectangle>
-                    <Rectangle Fill="#9dc633" Height="2" Width="2" Canvas.Right="3" Canvas.Top="3"></Rectangle>
-                    <Rectangle Fill="#9dc633" Height="2" Width="2" Canvas.Right="3" Canvas.Bottom="3"></Rectangle>
+                    <Rectangle Fill="#444" Height="2" Width="2" Canvas.Left="3" Canvas.Top="3"></Rectangle>
+                    <Rectangle Fill="#444" Height="2" Width="2" Canvas.Left="3" Canvas.Bottom="3"></Rectangle>
+                    <Rectangle Fill="#444" Height="2" Width="2" Canvas.Right="3" Canvas.Top="3"></Rectangle>
+                    <Rectangle Fill="#444" Height="2" Width="2" Canvas.Right="3" Canvas.Bottom="3"></Rectangle>
                 </Canvas>
             </Grid>
 

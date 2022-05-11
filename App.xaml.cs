@@ -1,11 +1,9 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Windows.Foundation.Collections;
@@ -31,15 +29,21 @@ namespace MurbongTimeScheduler
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            var sch = Global.ScheduleDB.Schedules[WorkType.None];
-            var now = DateTime.Now;
+            List<Schedule> sch = Global.ScheduleDB.Schedules[WorkType.None];
+            DateTime now = DateTime.Now;
 
-            if (sch.Count == 0) return;
+            if (sch.Count == 0)
+            {
+                return;
+            }
 
-            var days = sch.Where(r => r.Date.Date == now.Date && r.EndTime > now.TimeOfDay && r.AlarmCount == false);
-            if (days.Count() == 0) return;
+            IEnumerable<Schedule> days = sch.Where(r => r.Date.Date == now.Date && r.EndTime > now.TimeOfDay && r.AlarmCount == false);
+            if (days.Count() == 0)
+            {
+                return;
+            }
 
-            var first = days.OrderBy(r => r.StartTime).First();
+            Schedule first = days.OrderBy(r => r.StartTime).First();
             if (first.StartTime <= now.TimeOfDay)
             {
                 first.WakeAlarmApplication();
@@ -48,14 +52,12 @@ namespace MurbongTimeScheduler
             Global.WorkViews.ForEach(view => view.SetBackground());
         }
 
-
-
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
             ToastNotificationManagerCompat.OnActivated += toastArgs =>
             {
-                var args = ToastArguments.Parse(toastArgs.Argument);
+                ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
 
                 ValueSet userinput = toastArgs.UserInput;
 

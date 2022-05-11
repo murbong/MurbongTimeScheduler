@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 
 
@@ -26,27 +17,14 @@ namespace MurbongTimeScheduler.Views
         public string Title { get; set; }
         public WorkType WorkType { get; set; }
         public DateTime Date { get; set; }
-        public bool IsDone
-        {
-            get
-            {
-                return
-                  (Date.Date < DateTime.Now.Date) ||
+        public bool IsDone => (Date.Date < DateTime.Now.Date) ||
                   (Date.Date <= DateTime.Now.Date) && EndTime < DateTime.Now.TimeOfDay;
-            }
-        }
-        public bool IsInProgress
-        {
-            get
-            {
-                return StartTime < DateTime.Now.TimeOfDay && EndTime > DateTime.Now.TimeOfDay && DateTime.Now.Date == Date.Date;
-            }
-        }
+        public bool IsInProgress => StartTime < DateTime.Now.TimeOfDay && EndTime > DateTime.Now.TimeOfDay && DateTime.Now.Date == Date.Date;
 
         private TimeSpan startTime;
         public TimeSpan StartTime
         {
-            get { return startTime; }
+            get => startTime;
             set
             {
                 startTime = value;
@@ -59,7 +37,7 @@ namespace MurbongTimeScheduler.Views
         private TimeSpan endTime;
         public TimeSpan EndTime
         {
-            get { return endTime; }
+            get => endTime;
             set
             {
                 endTime = value;
@@ -78,6 +56,7 @@ namespace MurbongTimeScheduler.Views
             Clickable = true;
             InitializeComponent();
             Global.WorkViews.Add(this);
+            System.Globalization.Calendar calendarCalc = CultureInfo.CurrentCulture.Calendar;
         }
         public WorkView(DateTime date) : this()
         {
@@ -103,14 +82,14 @@ namespace MurbongTimeScheduler.Views
         }
         public void FinishPlacement()
         {
-            var sch = new Schedule(ID, Date, StartTime, EndTime, Title);
+            Schedule sch = new Schedule(ID, Date, StartTime, EndTime, Title);
             Global.ScheduleDB.Schedules[WorkType.None].Add(sch);
             Global.ScheduleDB.Save("save");
             SetBackground();
         }
         private void setPos(double x)
         {
-            var rat = x / Global.ratio * Global.fullWidth;
+            double rat = x / Global.ratio * Global.fullWidth;
             Canvas.SetLeft(this, rat);
             Canvas.SetTop(this, 1);
         }
@@ -133,7 +112,7 @@ namespace MurbongTimeScheduler.Views
         }
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var text = (sender as TextBox).Text;
+            string text = (sender as TextBox).Text;
             Title = text;
             Global.ScheduleDB.Schedules[WorkType].First(element => element.ID == ID).Title = text;
             Global.ScheduleDB.Save("save");
@@ -144,16 +123,21 @@ namespace MurbongTimeScheduler.Views
         {
             DayView.RemoveWorkViewAction(this);
             Global.ScheduleDB.Save("save");
-
+            if (WorkType != WorkType.None)
+            {
+                Global.ReloadEvent.Invoke(Date);
+            }
         }
 
         private void Edit()
         {
-            var viewSchedule = Global.ScheduleDB.Schedules[WorkType].Where(element => element.ID == ID).FirstOrDefault();
+            Schedule viewSchedule = Global.ScheduleDB.Schedules[WorkType].Where(element => element.ID == ID).FirstOrDefault();
 
-            var editview = new EditWindow(viewSchedule);
-            editview.Owner = Application.Current.MainWindow;
-            editview.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            EditWindow editview = new EditWindow(viewSchedule)
+            {
+                Owner = Application.Current.MainWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
             bool? result = editview.ShowDialog();
             if (result == true)
             {
@@ -163,6 +147,10 @@ namespace MurbongTimeScheduler.Views
             }
             setPos(startTime.TotalMinutes);
             setText();
+            if (WorkType != WorkType.None)
+            {
+                Global.ReloadEvent.Invoke(Date);
+            }
         }
 
         private void EditItem_Click(object sender, RoutedEventArgs e)
@@ -180,10 +168,12 @@ namespace MurbongTimeScheduler.Views
 
         private void WeekPromote_Click(object sender, RoutedEventArgs e)
         {
-            if (WorkType == WorkType.Week) return;
+            if (WorkType == WorkType.Week)
+            {
+                return;
+            }
 
-
-            var viewSchedule = Global.ScheduleDB.Schedules[WorkType].Where(element => element.ID == ID).FirstOrDefault();
+            Schedule viewSchedule = Global.ScheduleDB.Schedules[WorkType].Where(element => element.ID == ID).FirstOrDefault();
             Global.ScheduleDB.Schedules[WorkType].Remove(viewSchedule);
             WorkType = WorkType.Week;
             viewSchedule.WorkType = WorkType.Week;
@@ -191,20 +181,26 @@ namespace MurbongTimeScheduler.Views
             Global.ScheduleDB.Schedules[WorkType.Week].Add(viewSchedule);
             Global.ScheduleDB.Save("save");
 
+            Global.ReloadEvent.Invoke(Date);
+
         }
 
         private void MonthPromote_Click(object sender, RoutedEventArgs e)
         {
-            if (WorkType == WorkType.Month) return;
+            if (WorkType == WorkType.Month)
+            {
+                return;
+            }
 
-
-            var viewSchedule = Global.ScheduleDB.Schedules[WorkType].Where(element => element.ID == ID).FirstOrDefault();
+            Schedule viewSchedule = Global.ScheduleDB.Schedules[WorkType].Where(element => element.ID == ID).FirstOrDefault();
             Global.ScheduleDB.Schedules[WorkType].Remove(viewSchedule);
             WorkType = WorkType.Month;
             viewSchedule.WorkType = WorkType.Month;
 
             Global.ScheduleDB.Schedules[WorkType.Month].Add(viewSchedule);
             Global.ScheduleDB.Save("save");
+
+            Global.ReloadEvent.Invoke(Date);
 
         }
     }

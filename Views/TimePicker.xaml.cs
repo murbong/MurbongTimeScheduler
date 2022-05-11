@@ -1,17 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MurbongTimeScheduler.Views
 {
@@ -23,10 +11,7 @@ namespace MurbongTimeScheduler.Views
         private TimeSpan timeSpanValue;
         public TimeSpan? TimeSpanValue
         {
-            get
-            {
-                return timeSpanValue;
-            }
+            get => timeSpanValue;
             set
             {
                 timeSpanValue = value.Value;
@@ -41,9 +26,9 @@ namespace MurbongTimeScheduler.Views
 
         private void HourTxt_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var txt = sender as TextBox;
-            var temp = timeSpanValue;
-            var hour = int.Parse(txt.Text);
+            TextBox txt = sender as TextBox;
+            TimeSpan temp = timeSpanValue;
+            int hour = int.Parse(txt.Text);
             hour = Math.Min(Math.Max(0, hour), 23);
             txt.Text = hour.ToString("0");
 
@@ -52,9 +37,9 @@ namespace MurbongTimeScheduler.Views
 
         private void MinuteTxt_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var txt = sender as TextBox;
-            var temp = timeSpanValue;
-            var min = int.Parse(txt.Text);
+            TextBox txt = sender as TextBox;
+            TimeSpan temp = timeSpanValue;
+            int min = int.Parse(txt.Text);
             min = Math.Min(Math.Max(0, min), 59);
             txt.Text = min.ToString("0");
             timeSpanValue = new TimeSpan(temp.Hours, min, temp.Seconds);
